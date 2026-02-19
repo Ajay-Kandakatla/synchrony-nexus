@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexus Platform — Developer Integration Guide & API Specs</title>
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-light: #3b82f6;
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface-alt: #334155;
+    --border: #475569;
+    --text: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --info: #3b82f6;
+    --code-bg: #0d1117;
+    --accent: #a78bfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+  a { color: var(--primary-light); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Header */
+  .hero {
+    background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 50%, #7c3aed 100%);
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+  .hero p { font-size: 1rem; opacity: 0.85; max-width: 600px; margin: 0 auto; }
+  .hero .badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.35rem 1rem; border-radius: 999px;
+    background: rgba(255,255,255,0.15); font-size: 0.8rem; font-weight: 600;
+    margin-top: 1rem;
+  }
+  .hero .badge .dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--success);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* Layout */
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .nav-back { display: inline-flex; align-items: center; gap: 0.375rem; margin-bottom: 2rem; font-weight: 600; font-size: 0.875rem; }
+
+  /* TOC */
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 3rem;
+  }
+  .toc h2 { font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; }
+  .toc ol { padding-left: 1.25rem; }
+  .toc li { margin: 0.35rem 0; }
+  .toc a { color: var(--text); font-weight: 500; }
+  .toc a:hover { color: var(--primary-light); }
+
+  /* Sections */
+  section { margin-bottom: 3rem; }
+  h2 {
+    font-size: 1.5rem; font-weight: 800; color: var(--text);
+    border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem; letter-spacing: -0.01em;
+  }
+  h3 { font-size: 1.125rem; font-weight: 700; margin: 1.5rem 0 0.75rem; color: var(--text); }
+  h4 { font-size: 0.9375rem; font-weight: 700; margin: 1.25rem 0 0.5rem; color: var(--accent); }
+  p { margin-bottom: 0.75rem; color: var(--text-secondary); }
+
+  /* API Endpoint blocks */
+  .endpoint {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 1.25rem 0;
+    overflow: hidden;
+  }
+  .endpoint-header {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.875rem 1.25rem;
+    background: var(--surface-alt);
+    border-bottom: 1px solid var(--border);
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+  .method {
+    display: inline-block; padding: 0.2rem 0.625rem;
+    border-radius: 4px; font-size: 0.75rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .method-get { background: #065f46; color: #6ee7b7; }
+  .method-post { background: #1e3a5f; color: #93c5fd; }
+  .endpoint-path { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+  .endpoint-body { padding: 1.25rem; }
+  .endpoint-desc { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem; }
+
+  /* Code blocks */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: #c9d1d9;
+    margin: 0.75rem 0;
+  }
+  code {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.85em;
+    background: var(--surface-alt);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+  pre code { background: none; padding: 0; color: inherit; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.875rem; }
+  th {
+    text-align: left; padding: 0.625rem 0.75rem;
+    background: var(--surface-alt); color: var(--text);
+    font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em;
+    border-bottom: 2px solid var(--border);
+  }
+  td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+  tr:last-child td { border-bottom: none; }
+
+  /* Keyword highlights */
+  .kw { color: #ff7b72; }
+  .str { color: #a5d6ff; }
+  .type { color: #7ee787; }
+  .comment { color: #8b949e; font-style: italic; }
+  .num { color: #79c0ff; }
+
+  /* Info boxes */
+  .info-box {
+    display: flex; gap: 0.75rem; padding: 1rem 1.25rem;
+    border-radius: 8px; margin: 1rem 0; font-size: 0.875rem;
+  }
+  .info-box.note { background: rgba(59, 130, 246, 0.1); border-left: 3px solid var(--info); }
+  .info-box.warn { background: rgba(245, 158, 11, 0.1); border-left: 3px solid var(--warning); }
+  .info-box.success { background: rgba(34, 197, 94, 0.1); border-left: 3px solid var(--success); }
+  .info-box .icon { font-size: 1.25rem; flex-shrink: 0; }
+
+  /* Architecture diagram */
+  .arch-diagram {
+    background: var(--code-bg);
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    overflow-x: auto;
+    text-align: center;
+    color: #8b949e;
+  }
+  .arch-box {
+    display: inline-block; padding: 0.5rem 1rem;
+    border: 1px solid var(--border); border-radius: 6px;
+    background: var(--surface); color: var(--text);
+    font-weight: 600; font-size: 0.8rem; margin: 0.25rem;
+  }
+  .arch-arrow { color: var(--accent); font-size: 1.25rem; display: block; margin: 0.125rem 0; }
+
+  /* Checklist */
+  .checklist { list-style: none; padding: 0; }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: 0.5rem;
+    padding: 0.35rem 0; font-size: 0.875rem; color: var(--text-secondary);
+  }
+  .checklist li::before {
+    content: '☐'; flex-shrink: 0; font-size: 1rem; color: var(--text-muted);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero { padding: 2rem 1.25rem; }
+    .hero h1 { font-size: 1.5rem; }
+    .container { padding: 1.5rem 1rem; }
+    .endpoint-header { flex-wrap: wrap; }
+    pre { font-size: 0.75rem; padding: 0.75rem; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero Header -->
+<header class="hero">
+  <h1>Nexus Developer Guide</h1>
+  <p>Complete API specifications, integration patterns, and deployment guides for connecting real backends to the Nexus financial platform.</p>
+  <div class="badge">
+    <span class="dot"></span>
+    Demo Mode — All endpoints return simulated data
+  </div>
+</header>
+
+<div class="container">
+
+<!-- Back nav -->
+<a href="/" class="nav-back">&larr; Back to Nexus App</a>
+
+<!-- Table of Contents -->
+<div class="toc">
+  <h2>Table of Contents</h2>
+  <ol>
+    <li><a href="#architecture">Architecture Overview</a></li>
+    <li><a href="#products-api">Products API (5 endpoints)</a></li>
+    <li><a href="#ai-api">AI Engine API (4 endpoints)</a></li>
+    <li><a href="#auth-api">Auth API (1 endpoint)</a></li>
+    <li><a href="#disputes-api">Disputes API (3 endpoints)</a></li>
+    <li><a href="#marketplace-api">Marketplace API (3 endpoints)</a></li>
+    <li><a href="#integration">Step-by-Step Integration Guide</a></li>
+    <li><a href="#env">Environment Configuration</a></li>
+    <li><a href="#testing">Testing</a></li>
+    <li><a href="#deployment">Deployment</a></li>
+  </ol>
+</div>
+
+<!-- ========================================================================= -->
+<!-- 1. Architecture Overview -->
+<!-- ========================================================================= -->
+<section id="architecture">
+  <h2>1. Architecture Overview</h2>
+  <p>All external API communication flows through a strict layered architecture. UI components never call <code>fetch</code> directly. Instead, data travels through the adapter pattern:</p>
+
+  <div class="arch-diagram">
+    <div class="arch-box">UI Components (React 19)</div>
+    <span class="arch-arrow">↓ React Query hooks</span>
+    <div class="arch-box">Domain Services (Business Logic)</div>
+    <span class="arch-arrow">↓ Adapter methods</span>
+    <div class="arch-box">API Adapters (Integration Layer)</div>
+    <span class="arch-arrow">↓ ApiClient (fetch + Zod + retry)</span>
+    <div class="arch-box">Real Backend / MSW Mock</div>
+  </div>
+
+  <div class="info-box note">
+    <span class="icon">💡</span>
+    <div>
+      <strong>How Mocking Works:</strong> In development, MSW (Mock Service Worker) intercepts all HTTP requests at the network level. The app boots identically whether hitting real or mock APIs — no <code>if (isDev)</code> conditionals anywhere.
+    </div>
+  </div>
+
+  <h3>Key Files</h3>
+  <table>
+    <thead><tr><th>File</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td><code>src/infrastructure/api/api-client.ts</code></td><td>Typed HTTP client with Zod validation, retries, dedup</td></tr>
+      <tr><td><code>src/infrastructure/api/api-adapter.ts</code></td><td>Adapter interfaces, registry, response types</td></tr>
+      <tr><td><code>src/infrastructure/api/mock-api-service.ts</code></td><td>Mock adapter implementing ProductApiAdapter with full CRUD</td></tr>
+      <tr><td><code>src/infrastructure/auth/auth-service.ts</code></td><td>Token lifecycle (in-memory access token, httpOnly refresh)</td></tr>
+      <tr><td><code>src/test/mocks/handlers.ts</code></td><td>MSW mock API handlers</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Global Request Headers</h3>
+  <p>Every request includes these headers (auto-injected by ApiClient):</p>
+  <pre><code><span class="comment">// Automatically added to every request</span>
+Authorization: Bearer {accessToken}
+Content-Type: application/json
+X-Request-ID: {uuid}</code></pre>
+
+  <p>Base URL: <code>{VITE_API_BASE_URL}/api/v1/{path}</code> (default: <code>http://localhost:8080</code>)</p>
+</section>
+
+<!-- ========================================================================= -->
+<!-- 2. Products API -->
+<!-- ========================================================================= -->
+<section id="products-api">
+  <h2>2. Products API</h2>
+  <p>Core CRUD operations for credit products, payments, transactions, and statements.</p>
+
+  <!-- GET /products -->
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method method-get">GET</span>
+      <span class="endpoint-path">/api/v1/products</span>
+    </div>
+    <div class="endpoint-body">
+      <p class="endpoint-desc">Fetch all credit products for the authenticated user.</p>
+
+      <h4>Response: ProductListResponse</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">ProductListResponse</span> {
+  products: <span class="kw">readonly</span> <span class="type">RawProductData</span>[];
+}
+
+<span class="kw">interface</span> <span class="type">RawProductData</span> {
+  id: <span class="type">string</span>;
+  externalId: <span class="type">string</span>;
+  category: <span class="str">'credit_card'</span> | <span class="str">'bnpl'</span> | <span class="str">'savings'</span> | <span class="str">'cd'</span>
+           | <span class="str">'ira'</span> | <span class="str">'money_market'</span> | <span class="str">'installment_loan'</span>
+           | <span class="str">'care_credit'</span> | <span class="str">'promotional_financing'</span>;
+  status: <span class="str">'active'</span> | <span class="str">'pending_activation'</span> | <span class="str">'suspended'</span>
+        | <span class="str">'closed'</span> | <span class="str">'delinquent'</span> | <span class="str">'charged_off'</span>;
+  displayName: <span class="type">string</span>;
+  issuer: <span class="type">string</span>;
+  partner: {
+    id: <span class="type">string</span>;
+    name: <span class="type">string</span>;
+    logoUrl: <span class="type">string</span>;
+    category: <span class="type">string</span>;
+  };
+  openedAt: <span class="type">string</span>;              <span class="comment">// ISO 8601</span>
+  creditLimit?: <span class="type">number</span>;
+  currentBalance?: <span class="type">number</span>;
+  availableCredit?: <span class="type">number</span>;
+  apr?: {
+    purchase: <span class="type">number</span>;
+    cashAdvance: <span class="type">number</span>;
+    promotional?: {
+      rate: <span class="type">number</span>;
+      expiresAt: <span class="type">string</span>;        <span class="comment">// ISO 8601</span>
+      remainingBalance: <span class="type">number</span>;
+    };
+  };
+  minimumPaymentDue?: <span class="type">number</span>;
+  paymentDueDate?: <span class="type">string</span>;      <span class="comment">// ISO 8601</span>
+  lastFourDigits?: <span class="type">string</span>;
+}</code></pre>
+
+      <h4>Example Request</h4>
+      <pre><code>curl -X GET "http://localhost:8080/api/v1/products" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -H "X-Request-ID: $(uuidgen)"</code></pre>
+    </div>
+  </div>
+
+  <!-- GET /products/:id -->
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method method-get">GET</span>
+      <span class="endpoint-path">/api/v1/products/:id</span>
+    </div>
+    <div class="endpoint-body">
+      <p class="endpoint-desc">Fetch a single product by ID.</p>
+      <h4>Response: ProductDetailResponse</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">ProductDetailResponse</span> {
+  product: <span class="type">RawProductData</span>;
+}</code></pre>
+    </div>
+  </div>
+
+  <!-- POST /products/:id/payments -->
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method method-post">POST</span>
+      <span class="endpoint-path">/api/v1/products/:id/payments</span>
+    </div>
+    <div class="endpoint-body">
+      <p class="endpoint-desc">Submit a payment against a product.</p>
+
+      <h4>Request: PaymentRequest</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">PaymentRequest</span> {
+  amount: <span class="type">number</span>;               <span class="comment">// Payment amount in dollars</span>
+  sourceAccountId: <span class="type">string</span>;      <span class="comment">// Funding source account ID</span>
+  scheduledDate?: <span class="type">string</span>;       <span class="comment">// ISO 8601, omit for immediate</span>
+}</code></pre>
+
+      <h4>Response: PaymentResponse</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">PaymentResponse</span> {
+  confirmationId: <span class="type">string</span>;
+  status: <span class="str">'confirmed'</span> | <span class="str">'pending'</span> | <span class="str">'failed'</span>;
+  scheduledDate: <span class="type">string</span>;        <span class="comment">// ISO 8601</span>
+}</code></pre>
+
+      <h4>Example Request</h4>
+      <pre><code>curl -X POST "http://localhost:8080/api/v1/products/prod-1/payments" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 200.00,
+    "sourceAccountId": "bank-acct-001",
+    "scheduledDate": "2026-02-20T00:00:00Z"
+  }'</code></pre>
+    </div>
+  </div>
+
+  <!-- GET /products/:id/transactions -->
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method method-get">GET</span>
+      <span class="endpoint-path">/api/v1/products/:id/transactions</span>
+    </div>
+    <div class="endpoint-body">
+      <p class="endpoint-desc">Fetch transactions for a product with optional filtering.</p>
+      <h4>Query Parameters</h4>
+      <table>
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>from</code></td><td>string</td><td>ISO 8601 start date</td></tr>
+          <tr><td><code>to</code></td><td>string</td><td>ISO 8601 end date</td></tr>
+          <tr><td><code>limit</code></td><td>number</td><td>Max results (default: 25)</td></tr>
+          <tr><td><code>offset</code></td><td>number</td><td>Pagination offset</td></tr>
+          <tr><td><code>category</code></td><td>string</td><td>Filter by category</td></tr>
+        </tbody>
+      </table>
+      <h4>Response: TransactionListResponse</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">TransactionListResponse</span> {
+  transactions: <span class="kw">readonly</span> <span class="type">RawTransactionData</span>[];
+  total: <span class="type">number</span>;
+  hasMore: <span class="type">boolean</span>;
+}
+
+<span class="kw">interface</span> <span class="type">RawTransactionData</span> {
+  id: <span class="type">string</span>;
+  date: <span class="type">string</span>;                 <span class="comment">// ISO 8601</span>
+  description: <span class="type">string</span>;
+  merchantName: <span class="type">string</span>;
+  amount: <span class="type">number</span>;               <span class="comment">// Positive = charge, negative = credit/payment</span>
+  category: <span class="type">string</span>;
+  status: <span class="str">'posted'</span> | <span class="str">'pending'</span> | <span class="str">'declined'</span>;
+  disputed: <span class="type">boolean</span>;
+}</code></pre>
+    </div>
+  </div>
+
+  <!-- GET /products/:id/statements -->
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method method-get">GET</span>
+      <span class="endpoint-path">/api/v1/products/:id/statements</span>
+    </div>
+    <div class="endpoint-body">
+      <p class="endpoint-desc">Fetch statement history for a product.</p>
+      <h4>Response: StatementListResponse</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">StatementListResponse</span> {
+  statements: <span class="kw">readonly</span> <span class="type">RawStatementData</span>[];
+}
+
+<span class="kw">interface</span> <span class="type">RawStatementData</span> {
+  id: <span class="type">string</span>;
+  periodStart: <span class="type">string</span>;          <span class="comment">// ISO 8601</span>
+  periodEnd: <span class="type">string</span>;            <span class="comment">// ISO 8601</span>
+  closingBalance: <span class="type">number</span>;
+  minimumPaymentDue: <span class="type">number</span>;
+  paymentDueDate: <span class="type">string</span>;       <span class="comment">// ISO 8601</span>
+  downloadUrl: <span class="type">string</span>;          <span class="comment">// Signed URL for PDF download</span>
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- 3. AI Engine API -->
+<!-- ========================================================================= -->
+<section id="ai-api">
+  <h2>3. AI Engine API</h2>
+  <p>AI-powered insights, risk assessments, nudges, and conversational assistant.</p>
+
+  <!-- GET /ai/insights -->
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method method-get">GET</span>
+      <span class="endpoint-path">/api/v1/ai/insights</span>
+    </div>
+    <div class="endpoint-body">
+      <p class="endpoint-desc">Fetch AI-generated insights for the authenticated user.</p>
+      <h4>Query Parameters</h4>
+      <table>
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>categories</code></td><td>string</td><td>Comma-separated InsightCategory values</td></tr>
+          <tr><td><code>minPriority</code></td><td>string</td><td>critical | high | medium | low</td></tr>
+          <tr><td><code>limit</code></td><td>number</td><td>Max results</td></tr>
+        </tbody>
+      </table>
+      <h4>Response: InsightListResponse</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">Insight</span> {
+  id: <span class="type">string</span>;
+  category: <span class="str">'payment_optimization'</span> | <span class="str">'credit_improvement'</span>
+           | <span class="str">'savings_opportunity'</span> | <span class="str">'risk_alert'</span>
+           | <span class="str">'promotional_expiry'</span> | <span class="str">'spending_pattern'</span>
+           | <span class="str">'debt_reduction'</span> | <span class="str">'product_recommendation'</span>;
+  priority: <span class="str">'critical'</span> | <span class="str">'high'</span> | <span class="str">'medium'</span> | <span class="str">'low'</span>;
+  title: <span class="type">string</span>;
+  summary: <span class="type">string</span>;
+  explanation: {
+    reasoning: <span class="type">string</span>;
+    dataPoints: <span class="type">Array</span>&lt;{ label: <span class="type">string</span>; value: <span class="type">string</span>; source: <span class="type">string</span> }&gt;;
+    confidence: <span class="type">number</span>;          <span class="comment">// 0.0 to 1.0</span>
+  };
+  suggestedActions: <span class="type">Array</span>&lt;{
+    id: <span class="type">string</span>;
+    type: <span class="str">'navigate'</span> | <span class="str">'api_call'</span> | <span class="str">'schedule'</span> | <span class="str">'dismiss'</span>;
+    label: <span class="type">string</span>;
+    estimatedImpact?: { metric: <span class="type">string</span>; currentValue: <span class="type">string</span>; projectedValue: <span class="type">string</span> };
+    payload: <span class="type">Record</span>&lt;<span class="type">string</span>, <span class="type">unknown</span>&gt;;
+  }&gt;;
+  relatedProductIds: <span class="type">string</span>[];
+  createdAt: <span class="type">string</span>;             <span class="comment">// ISO 8601</span>
+}</code></pre>
+    </div>
+  </div>
+
+  <!-- GET /ai/risk-assessments -->
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method method-get">GET</span>
+      <span class="endpoint-path">/api/v1/ai/risk-assessments</span>
+    </div>
+    <div class="endpoint-body">
+      <p class="endpoint-desc">Fetch payment risk assessments for all products.</p>
+      <h4>Response: RiskAssessmentListResponse</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">PaymentRiskAssessment</span> {
+  productId: <span class="type">string</span>;
+  riskScore: <span class="type">number</span>;             <span class="comment">// 0-100, higher = riskier</span>
+  missedPaymentProbability: <span class="type">number</span>; <span class="comment">// 0.0 to 1.0</span>
+  contributingFactors: <span class="type">Array</span>&lt;{
+    factor: <span class="type">string</span>;
+    direction: <span class="str">'increasing_risk'</span> | <span class="str">'decreasing_risk'</span>;
+    magnitude: <span class="str">'low'</span> | <span class="str">'medium'</span> | <span class="str">'high'</span>;
+  }&gt;;
+  assessedAt: <span class="type">string</span>;            <span class="comment">// ISO 8601</span>
+}</code></pre>
+    </div>
+  </div>
+
+  <!-- GET /ai/nudges -->
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method method-get">GET</span>
+      <span class="endpoint-path">/api/v1/ai/nudges</span>
+    </div>
+    <div class="endpoint-body">
+      <p class="endpoint-desc">Fetch behavioral nudges for the current user.</p>
+      <h4>Response: NudgeListResponse</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">BehavioralNudge</span> {
+  id: <span class="type">string</span>;
+  type: <span class="str">'payment_reminder'</span> | <span class="str">'savings_prompt'</span> | <span class="str">'credit_tip'</span>
+      | <span class="str">'promotional_alert'</span> | <span class="str">'milestone_celebration'</span> | <span class="str">'risk_warning'</span>;
+  trigger: <span class="str">'time_based'</span> | <span class="str">'event_based'</span> | <span class="str">'threshold_based'</span> | <span class="str">'pattern_based'</span>;
+  content: {
+    headline: <span class="type">string</span>;
+    body: <span class="type">string</span>;
+    cta?: { id: <span class="type">string</span>; type: <span class="type">string</span>; label: <span class="type">string</span>; payload: <span class="type">Record</span>&lt;<span class="type">string</span>, <span class="type">unknown</span>&gt; };
+  };
+  targetProductIds: <span class="type">string</span>[];
+  priority: <span class="str">'critical'</span> | <span class="str">'high'</span> | <span class="str">'medium'</span> | <span class="str">'low'</span>;
+  createdAt: <span class="type">string</span>;             <span class="comment">// ISO 8601</span>
+}</code></pre>
+    </div>
+  </div>
+
+  <!-- POST /ai/conversation/messages -->
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method method-post">POST</span>
+      <span class="endpoint-path">/api/v1/ai/conversation/messages</span>
+    </div>
+    <div class="endpoint-body">
+      <p class="endpoint-desc">Send a message to the AI conversational assistant.</p>
+      <h4>Request</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">ConversationMessageRequest</span> {
+  message: <span class="type">string</span>;
+  context: {
+    sessionId: <span class="type">string</span>;
+    activeProductId?: <span class="type">string</span>;
+    recentInsightIds: <span class="type">string</span>[];
+    userIntent?: <span class="type">string</span>;
+  };
+}</code></pre>
+      <h4>Response</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">ConversationMessageResponse</span> {
+  id: <span class="type">string</span>;
+  role: <span class="str">'assistant'</span>;
+  content: <span class="type">string</span>;
+  attachments?: <span class="type">Array</span>&lt;{
+    type: <span class="str">'product_card'</span> | <span class="str">'chart'</span> | <span class="str">'transaction'</span> | <span class="str">'insight'</span>;
+    data: <span class="type">Record</span>&lt;<span class="type">string</span>, <span class="type">unknown</span>&gt;;
+  }&gt;;
+  actions?: <span class="type">Array</span>&lt;{
+    id: <span class="type">string</span>; type: <span class="type">string</span>; label: <span class="type">string</span>;
+    payload: <span class="type">Record</span>&lt;<span class="type">string</span>, <span class="type">unknown</span>&gt;;
+  }&gt;;
+  timestamp: <span class="type">string</span>;             <span class="comment">// ISO 8601</span>
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- 4. Auth API -->
+<!-- ========================================================================= -->
+<section id="auth-api">
+  <h2>4. Auth API</h2>
+
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method method-post">POST</span>
+      <span class="endpoint-path">/api/v1/auth/refresh</span>
+    </div>
+    <div class="endpoint-body">
+      <p class="endpoint-desc">Refresh the access token using the httpOnly refresh cookie. Called automatically by AuthService when the token expires (5-minute TTL).</p>
+      <h4>Response: TokenResponse</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">TokenResponse</span> {
+  accessToken: <span class="type">string</span>;           <span class="comment">// Short-lived JWT (5 minutes)</span>
+  expiresIn: <span class="type">number</span>;             <span class="comment">// Seconds until expiry (e.g., 300)</span>
+}</code></pre>
+
+      <div class="info-box note">
+        <span class="icon">🔑</span>
+        <div>Access tokens are stored in memory only (never localStorage). Refresh tokens are httpOnly secure cookies. Token refresh is automatic and transparent to all API calls.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- 5. Disputes API -->
+<!-- ========================================================================= -->
+<section id="disputes-api">
+  <h2>5. Disputes API</h2>
+  <p>Manage transaction disputes — file, track, and resolve.</p>
+
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method method-get">GET</span>
+      <span class="endpoint-path">/api/v1/disputes</span>
+    </div>
+    <div class="endpoint-body">
+      <p class="endpoint-desc">Fetch all disputes for the authenticated user.</p>
+      <h4>Response: DisputeListResponse</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">Dispute</span> {
+  id: <span class="type">string</span>;
+  caseNumber: <span class="type">string</span>;
+  productId: <span class="type">string</span>;
+  transactionId: <span class="type">string</span>;
+  amount: <span class="type">number</span>;
+  reason: <span class="type">string</span>;
+  category: <span class="str">'unauthorized'</span> | <span class="str">'duplicate'</span> | <span class="str">'wrong_amount'</span>
+          | <span class="str">'not_received'</span> | <span class="str">'quality'</span> | <span class="str">'cancelled_sub'</span>
+          | <span class="str">'fraud'</span> | <span class="str">'billing_error'</span>;
+  status: <span class="str">'needs_action'</span> | <span class="str">'investigating'</span> | <span class="str">'reviewing'</span>
+        | <span class="str">'provisional_credit'</span> | <span class="str">'resolved'</span>;
+  provisionalCreditIssued: <span class="type">boolean</span>;
+  provisionalCreditAmount?: <span class="type">number</span>;
+  estimatedResolution: <span class="type">string</span>;  <span class="comment">// ISO 8601</span>
+  timeline: <span class="type">Array</span>&lt;{
+    date: <span class="type">string</span>;
+    title: <span class="type">string</span>;
+    detail: <span class="type">string</span>;
+  }&gt;;
+  filedAt: <span class="type">string</span>;              <span class="comment">// ISO 8601</span>
+  resolvedAt?: <span class="type">string</span>;          <span class="comment">// ISO 8601</span>
+  outcome?: <span class="str">'in_your_favor'</span> | <span class="str">'denied'</span> | <span class="str">'partial'</span>;
+  amountRecovered?: <span class="type">number</span>;
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method method-post">POST</span>
+      <span class="endpoint-path">/api/v1/disputes</span>
+    </div>
+    <div class="endpoint-body">
+      <p class="endpoint-desc">File a new dispute.</p>
+      <h4>Request: FileDisputeRequest</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">FileDisputeRequest</span> {
+  productId: <span class="type">string</span>;
+  transactionId: <span class="type">string</span>;
+  category: <span class="type">DisputeCategory</span>;
+  description?: <span class="type">string</span>;
+  supportingDocumentIds?: <span class="type">string</span>[];
+}</code></pre>
+      <h4>Response: FileDisputeResponse</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">FileDisputeResponse</span> {
+  disputeId: <span class="type">string</span>;
+  caseNumber: <span class="type">string</span>;
+  status: <span class="str">'needs_action'</span> | <span class="str">'investigating'</span>;
+  estimatedResolution: <span class="type">string</span>;  <span class="comment">// ISO 8601</span>
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method method-post">POST</span>
+      <span class="endpoint-path">/api/v1/disputes/:id/documents</span>
+    </div>
+    <div class="endpoint-body">
+      <p class="endpoint-desc">Upload supporting documents for an active dispute.</p>
+      <h4>Request</h4>
+      <pre><code><span class="comment">// multipart/form-data</span>
+<span class="comment">// Field: file (binary)</span>
+<span class="comment">// Field: type (string) - "receipt" | "screenshot" | "correspondence" | "id"</span></code></pre>
+      <h4>Response</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">DocumentUploadResponse</span> {
+  documentId: <span class="type">string</span>;
+  filename: <span class="type">string</span>;
+  uploadedAt: <span class="type">string</span>;           <span class="comment">// ISO 8601</span>
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- 6. Marketplace API -->
+<!-- ========================================================================= -->
+<section id="marketplace-api">
+  <h2>6. Marketplace API</h2>
+  <p>Personalized offers, partner deals, and credit limit increase eligibility.</p>
+
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method method-get">GET</span>
+      <span class="endpoint-path">/api/v1/marketplace/offers</span>
+    </div>
+    <div class="endpoint-body">
+      <p class="endpoint-desc">Fetch personalized pre-approved offers and partner deals.</p>
+      <h4>Response: OffersResponse</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">OffersResponse</span> {
+  preApproved: <span class="type">Array</span>&lt;{
+    id: <span class="type">string</span>;
+    name: <span class="type">string</span>;
+    creditLimit: <span class="type">number</span>;
+    apr: <span class="type">string</span>;
+    promoApr?: <span class="type">string</span>;
+    benefits: <span class="type">string</span>[];
+    matchScore: <span class="type">number</span>;          <span class="comment">// 0-100, AI confidence</span>
+    category: <span class="type">string</span>;
+    annualFee: <span class="type">string</span>;
+  }&gt;;
+  partnerDeals: <span class="type">Array</span>&lt;{
+    id: <span class="type">string</span>;
+    partner: <span class="type">string</span>;
+    headline: <span class="type">string</span>;
+    details: <span class="type">string</span>;
+    savings: <span class="type">string</span>;
+    expiresAt?: <span class="type">string</span>;         <span class="comment">// ISO 8601</span>
+    category: <span class="type">string</span>;
+    tag: <span class="str">'exclusive'</span> | <span class="str">'limited'</span> | <span class="str">'new'</span> | <span class="str">'popular'</span>;
+  }&gt;;
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method method-post">POST</span>
+      <span class="endpoint-path">/api/v1/marketplace/deals/:id/activate</span>
+    </div>
+    <div class="endpoint-body">
+      <p class="endpoint-desc">Activate a partner deal for the user.</p>
+      <h4>Response</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">ActivateDealResponse</span> {
+  dealId: <span class="type">string</span>;
+  activated: <span class="type">boolean</span>;
+  activatedAt: <span class="type">string</span>;          <span class="comment">// ISO 8601</span>
+  expiresAt: <span class="type">string</span>;             <span class="comment">// ISO 8601</span>
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method method-get">GET</span>
+      <span class="endpoint-path">/api/v1/marketplace/cli-eligibility</span>
+    </div>
+    <div class="endpoint-body">
+      <p class="endpoint-desc">Fetch credit limit increase eligibility for all products.</p>
+      <h4>Response: CLIEligibilityResponse</h4>
+      <pre><code><span class="kw">interface</span> <span class="type">CLIEligibilityResponse</span> {
+  eligible: <span class="type">Array</span>&lt;{
+    productId: <span class="type">string</span>;
+    currentLimit: <span class="type">number</span>;
+    potentialLimit: <span class="type">number</span>;
+    utilizationPct: <span class="type">number</span>;
+    onTimePayments: <span class="type">number</span>;     <span class="comment">// Consecutive months</span>
+    hardPull: <span class="type">boolean</span>;           <span class="comment">// Whether requesting triggers hard pull</span>
+  }&gt;;
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- 7. Integration Guide -->
+<!-- ========================================================================= -->
+<section id="integration">
+  <h2>7. Step-by-Step Integration</h2>
+
+  <h3>Quick Start</h3>
+  <pre><code><span class="comment"># 1. Clone and install</span>
+git clone &lt;repo&gt; && cd nexus && npm install
+
+<span class="comment"># 2. Set your backend URL</span>
+echo <span class="str">"VITE_API_BASE_URL=https://your-api.example.com"</span> > .env.local
+
+<span class="comment"># 3. Run in dev mode (MSW auto-disabled when VITE_API_BASE_URL is set)</span>
+npm run dev
+
+<span class="comment"># 4. Build for production</span>
+npm run build</code></pre>
+
+  <h3>Creating a Real API Adapter</h3>
+  <p>Implement the <code>ProductApiAdapter</code> interface with Zod schema validation. See the full example in <code>docs/DEVELOPER_GUIDE.md</code> Section 3.1.</p>
+
+  <h3>Swapping Mock for Real</h3>
+  <div class="info-box success">
+    <span class="icon">✅</span>
+    <div>Set <code>VITE_API_BASE_URL</code> to your server and MSW automatically stops intercepting. No code changes needed.</div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- 8. Environment Configuration -->
+<!-- ========================================================================= -->
+<section id="env">
+  <h2>8. Environment Configuration</h2>
+  <table>
+    <thead><tr><th>Variable</th><th>Required</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>VITE_API_BASE_URL</code></td><td>No</td><td><code>http://localhost:8080</code></td><td>Base URL for all API endpoints</td></tr>
+      <tr><td><code>VITE_BFF_BASE_URL</code></td><td>No</td><td>Same as API</td><td>Backend-for-Frontend URL (auth endpoints)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Feature Flags</h3>
+  <table>
+    <thead><tr><th>Flag</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>ai-copilot</code></td><td>true</td><td>AI insights and conversation panel</td></tr>
+      <tr><td><code>nudge-overlay</code></td><td>true</td><td>Behavioral nudge display</td></tr>
+      <tr><td><code>credit-health-dashboard</code></td><td>true</td><td>Credit health visualization</td></tr>
+      <tr><td><code>dispute-ai-triage</code></td><td>true</td><td>AI-assisted dispute flow</td></tr>
+      <tr><td><code>dark-mode</code></td><td>true</td><td>Dark mode theme toggle</td></tr>
+      <tr><td><code>payment-ai-suggestions</code></td><td>true</td><td>AI-powered payment suggestions</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ========================================================================= -->
+<!-- 9. Testing -->
+<!-- ========================================================================= -->
+<section id="testing">
+  <h2>9. Testing</h2>
+  <pre><code><span class="comment"># Run all tests</span>
+npm test
+
+<span class="comment"># Run tests in watch mode</span>
+npm test -- --watch
+
+<span class="comment"># Run with coverage</span>
+npm run test:coverage</code></pre>
+
+  <div class="info-box note">
+    <span class="icon">🧪</span>
+    <div>The project uses MSW for integration tests with the same handlers as development. Override handlers per-test for error scenarios.</div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- 10. Deployment -->
+<!-- ========================================================================= -->
+<section id="deployment">
+  <h2>10. Deployment</h2>
+
+  <h3>Vercel (Pre-configured)</h3>
+  <pre><code>npm i -g vercel && vercel --prod</code></pre>
+
+  <h3>Docker</h3>
+  <pre><code>docker build \
+  --build-arg VITE_API_BASE_URL=https://api.nexus.example.com \
+  -t nexus-app .
+docker run -p 3000:80 nexus-app</code></pre>
+
+  <h3>AWS S3 + CloudFront</h3>
+  <pre><code>VITE_API_BASE_URL=https://api.nexus.example.com npm run build
+aws s3 sync dist/ s3://your-bucket --delete
+aws cloudfront create-invalidation --distribution-id YOUR_ID --paths "/*"</code></pre>
+
+  <h3>Integration Checklist</h3>
+  <ul class="checklist">
+    <li>Set <code>VITE_API_BASE_URL</code> to your backend</li>
+    <li>Implement auth refresh endpoint (<code>POST /api/v1/auth/refresh</code>)</li>
+    <li>Implement Products API (5 endpoints)</li>
+    <li>Implement AI Engine API (4 endpoints)</li>
+    <li>Implement Disputes API (3 endpoints)</li>
+    <li>Implement Marketplace API (3 endpoints)</li>
+    <li>Create adapter implementations with Zod schemas</li>
+    <li>Register adapters in the adapter registry</li>
+    <li>Remove or gate the MSW worker start</li>
+    <li>Run the test suite against real API: <code>npm test</code></li>
+    <li>Deploy with environment variables configured</li>
+  </ul>
+
+  <h3>Error Handling</h3>
+  <table>
+    <thead><tr><th>Status</th><th>Behavior</th></tr></thead>
+    <tbody>
+      <tr><td>401, 403</td><td>Triggers auth redirect</td></tr>
+      <tr><td>429</td><td>Retried with exponential backoff</td></tr>
+      <tr><td>500+</td><td>Retried up to 3 times (prod) / 1 time (dev)</td></tr>
+      <tr><td>Zod failure</td><td>Throws SCHEMA_VALIDATION_ERROR (not retried)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="info-box warn">
+    <span class="icon">⚠️</span>
+    <div><strong>Backoff formula:</strong> <code>min(1000 * 2^attempt + random(0..500), 30000) ms</code></div>
+  </div>
+</section>
+
+</div>
+
+<!-- Footer -->
+<footer style="text-align: center; padding: 2rem; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.8rem;">
+  Nexus Platform &mdash; Developer Guide &amp; API Specs &mdash; <a href="/">Back to App</a>
+</footer>
+
+</body>
+</html>

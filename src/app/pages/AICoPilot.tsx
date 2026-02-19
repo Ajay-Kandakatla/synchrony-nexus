@@ -478,35 +478,76 @@ export default function AICoPilot(): ReactNode {
           from { opacity: 0; transform: translateY(8px); }
           to   { opacity: 1; transform: translateY(0); }
         }
+        @keyframes pulseOrb {
+          0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(139, 92, 246, 0.4), 0 0 40px rgba(99, 102, 241, 0.2); }
+          50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(139, 92, 246, 0.6), 0 0 60px rgba(99, 102, 241, 0.35); }
+        }
+        @keyframes flameFlicker {
+          0%, 100% { transform: scale(1) rotate(0deg); }
+          25% { transform: scale(1.1) rotate(-3deg); }
+          50% { transform: scale(1.05) rotate(2deg); }
+          75% { transform: scale(1.15) rotate(-2deg); }
+        }
       `}</style>
 
       {/* ------------------------------------------------------------------ */}
-      {/* PAGE HEADER                                                        */}
+      {/* PAGE HEADER with AI Pulse Orb                                      */}
       {/* ------------------------------------------------------------------ */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
-        <div>
-          <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          {/* AI Pulse Orb */}
+          <div style={{ position: 'relative', flexShrink: 0 }}>
+            <div
               style={{
-                width: 36,
-                height: 36,
+                width: 52,
+                height: 52,
                 borderRadius: '50%',
-                background: 'linear-gradient(135deg, var(--color-primary), #6366f1)',
-                display: 'inline-flex',
+                background: 'radial-gradient(circle at 35% 35%, #a78bfa, #6366f1, #4f46e5)',
+                display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '1rem',
-                color: 'var(--color-text-inverse)',
-                flexShrink: 0,
+                fontWeight: 800,
+                color: '#fff',
+                animation: 'pulseOrb 2.5s ease-in-out infinite',
               }}
             >
               AI
+            </div>
+            {/* Notification count badge */}
+            <span
+              style={{
+                position: 'absolute',
+                top: -4,
+                right: -4,
+                width: 20,
+                height: 20,
+                borderRadius: '50%',
+                backgroundColor: '#ef4444',
+                color: '#fff',
+                fontSize: '0.6875rem',
+                fontWeight: 800,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '2px solid var(--color-surface)',
+                lineHeight: 1,
+              }}
+            >
+              3
             </span>
-            Nexus AI Co-Pilot
-          </h1>
-          <p style={{ margin: '0.25rem 0 0', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
-            Proactive insights and personalized guidance across all 15 of your accounts
-          </p>
+          </div>
+          <div>
+            <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text-primary)' }}>
+              Nexus AI Co-Pilot
+            </h1>
+            <p style={{ margin: '0.25rem 0 0', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
+              Proactive insights and personalized guidance across all 15 of your accounts
+            </p>
+            <p style={{ margin: '0.25rem 0 0', fontSize: '0.75rem', fontWeight: 600, color: '#a78bfa' }}>
+              3 insights need your attention
+            </p>
+          </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#22c55e' }} />

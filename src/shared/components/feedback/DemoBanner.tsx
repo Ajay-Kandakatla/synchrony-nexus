@@ -155,7 +155,7 @@ export interface DemoBannerProps {
  *  - A dismiss button (persisted in localStorage)
  */
 export function DemoBanner({
-  docsHref = '/docs',
+  docsHref = '/docs/',
   onDocsClick,
 }: DemoBannerProps = {}): ReactNode {
   const [dismissed, setDismissed] = useState<boolean>(() => {

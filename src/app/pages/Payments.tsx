@@ -153,6 +153,83 @@ export default function Payments(): ReactNode {
     return state;
   });
 
+  // Interest Impact Calculator state
+  const [selectedImpactOption, setSelectedImpactOption] = useState<'minimum' | 'double' | 'highApr'>('minimum');
+
+  // Interest Impact Calculator computations
+  const impactCalc = useMemo(() => {
+    const cardsWithBalance = demoCards.filter(c => c.balance > 0);
+    const totalBalance = cardsWithBalance.reduce((s, c) => s + c.balance, 0);
+    const totalMinPayment = cardsWithBalance.reduce((s, c) => s + c.minPayment, 0);
+
+    // Three payment scenarios
+    const scenarios = {
+      minimum: { label: 'Pay minimum', amount: totalMinPayment, description: 'Minimum across all cards' },
+      double: { label: 'Pay double', amount: totalMinPayment * 2, description: 'Double minimum payments' },
+      highApr: { label: 'Pay off high-APR first', amount: 3200, description: 'Target cards over 29% APR' },
+    } as const;
+
+    function computePayoffMetrics(monthlyPayment: number) {
+      let totalInterest = 0;
+      let maxMonths = 0;
+      let monthlyInterestCost = 0;
+
+      cardsWithBalance.forEach(card => {
+        const effectiveApr = card.promoApr ? card.promoApr.rate : card.apr;
+        const monthlyRate = effectiveApr / 100 / 12;
+        const cardShare = card.minPayment / totalMinPayment;
+        const cardPayment = Math.max(monthlyPayment * cardShare, card.minPayment);
+
+        if (monthlyRate > 0 && cardPayment > card.balance * monthlyRate) {
+          const months = Math.ceil(
+            -Math.log(1 - (card.balance * monthlyRate) / cardPayment) / Math.log(1 + monthlyRate)
+          );
+          const clampedMonths = Math.min(Math.max(months, 1), 360);
+          const interest = Math.round((cardPayment * clampedMonths) - card.balance);
+          totalInterest += Math.max(interest, 0);
+          maxMonths = Math.max(maxMonths, clampedMonths);
+          monthlyInterestCost += Math.round(card.balance * monthlyRate);
+        } else if (monthlyRate > 0) {
+          // Payment barely covers interest
+          totalInterest += Math.round(card.balance * monthlyRate * 360);
+          maxMonths = 360;
+          monthlyInterestCost += Math.round(card.balance * monthlyRate);
+        } else {
+          // 0% promo
+          const months = Math.ceil(card.balance / cardPayment);
+          maxMonths = Math.max(maxMonths, Math.min(months, 360));
+        }
+      });
+
+      const principalRatio = totalInterest > 0
+        ? totalBalance / (totalBalance + totalInterest)
+        : 1;
+      const interestRatio = 1 - principalRatio;
+
+      return { totalInterest, months: maxMonths, monthlyInterestCost, principalRatio, interestRatio };
+    }
+
+    const min = computePayoffMetrics(scenarios.minimum.amount);
+    const dbl = computePayoffMetrics(scenarios.double.amount);
+    const high = computePayoffMetrics(scenarios.highApr.amount);
+
+    return {
+      totalBalance,
+      scenarios,
+      metrics: { minimum: min, double: dbl, highApr: high },
+      savings: {
+        doubleVsMin: {
+          interestSaved: min.totalInterest - dbl.totalInterest,
+          monthsSaved: min.months - dbl.months,
+        },
+        highAprVsMin: {
+          interestSaved: min.totalInterest - high.totalInterest,
+          monthsSaved: min.months - high.months,
+        },
+      },
+    };
+  }, []);
+
   // Aggregates
   const upcomingThisWeek = demoCards.filter(c => c.daysUntilDue <= 7 && c.minPayment > 0);
   const totalDueThisWeek = upcomingThisWeek.reduce((s, c) => s + c.minPayment, 0);

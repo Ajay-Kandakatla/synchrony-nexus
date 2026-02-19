@@ -59,6 +59,23 @@ interface RewardEntry {
   type: string;
 }
 
+interface BoostOffer {
+  id: string;
+  partner: string;
+  color: string;
+  icon: string;
+  headline: string;
+  expiresIn: number;
+}
+
+interface DailyCashEntry {
+  date: string;
+  partner: string;
+  color: string;
+  amount: number;
+  type: string;
+}
+
 // ---------------------------------------------------------------------------
 // Data
 // ---------------------------------------------------------------------------

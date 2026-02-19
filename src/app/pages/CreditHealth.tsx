@@ -1,7 +1,9 @@
-import { type ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import { FinancialHealthDashboard } from '../../domains/credit-health/components/FinancialHealthDashboard';
 import type { FinancialHealthScore } from '../../core/types/user';
 import type { CreditProduct } from '../../core/types/product';
+import { Card } from '../../shared/components/ui/Card';
+import { Button } from '../../shared/components/ui/Button';
 
 /**
  * Credit Health page — wraps the FinancialHealthDashboard with demo data.

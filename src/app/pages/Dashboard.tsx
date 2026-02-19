@@ -305,6 +305,11 @@ export default function Dashboard(): ReactNode {
   const [collapsed, setCollapsed] = useState(false);
   const [expandedPerks, setExpandedPerks] = useState<string | null>(null);
   const [expandedScenario, setExpandedScenario] = useState<string | null>(null);
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [cardFrozen, setCardFrozen] = useState(false);
+  const [onlinePurchases, setOnlinePurchases] = useState(true);
+  const [internationalTxn, setInternationalTxn] = useState(true);
 
   // Aggregate stats
   const totalBalance = demoCards.reduce((s, c) => s + c.balance, 0);
@@ -313,6 +318,29 @@ export default function Dashboard(): ReactNode {
   const overallUtil = Math.round((totalBalance / totalLimit) * 100);
   const upcomingPayments = demoCards.filter((c) => c.daysUntilDue <= 7 && c.minPayment > 0);
   const promoCards = demoCards.filter((c) => c.promoApr);
+
+  // Spending by category for donut chart
+  const categoryColors: Record<string, string> = {
+    Home: '#004890', Retail: '#FF9900', Healthcare: '#00857C', Digital: '#003087',
+    Furniture: '#B8232F', Wholesale: '#0060A9', Telecom: '#CD040B', Music: '#000000',
+    Sports: '#00583E', Auto: '#E31837',
+  };
+  const spendingByCategory = useMemo(() => {
+    const map: Record<string, number> = {};
+    demoCards.forEach((c) => {
+      map[c.category] = (map[c.category] || 0) + c.balance;
+    });
+    return Object.entries(map)
+      .filter(([, v]) => v > 0)
+      .sort((a, b) => b[1] - a[1])
+      .map(([category, total]) => ({ category, total, color: categoryColors[category] || '#888' }));
+  }, []);
+  const totalSpending = spendingByCategory.reduce((s, c) => s + c.total, 0);
+
+  // Most recently used card (first card with a balance, sorted by nearest due date)
+  const mostRecentCard = useMemo(() => {
+    return demoCards.filter(c => c.balance > 0).sort((a, b) => a.daysUntilDue - b.daysUntilDue)[0];
+  }, []);
 
   // Filter
   const filtered = useMemo(() => {
