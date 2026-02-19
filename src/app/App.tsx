@@ -1,6 +1,7 @@
 import { type ReactNode, useState, Suspense, lazy } from 'react';
 import { Shell, type NavigationItem } from '../shared/components/layout/Shell';
 import { ErrorBoundary, DefaultErrorFallback } from '../shared/components/feedback/error-boundary';
+import { DemoBanner } from '../shared/components/feedback/DemoBanner';
 import { useServices } from './providers';
 
 /**
@@ -109,6 +110,8 @@ export function App(): ReactNode {
   const route = useRoute();
 
   return (
+    <>
+    <DemoBanner />
     <ErrorBoundary
       scope="app"
       fallback={(error, reset) => (
@@ -145,5 +148,6 @@ export function App(): ReactNode {
         </Suspense>
       </Shell>
     </ErrorBoundary>
+    </>
   );
 }
