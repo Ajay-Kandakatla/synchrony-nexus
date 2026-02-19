@@ -17,6 +17,10 @@ import { useServices } from './providers';
 // Lazy-loaded domain modules for code splitting
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const CreditHealth = lazy(() => import('./pages/CreditHealth'));
+const Payments = lazy(() => import('./pages/Payments'));
+const Disputes = lazy(() => import('./pages/Disputes'));
+const Marketplace = lazy(() => import('./pages/Marketplace'));
+const AICoPilot = lazy(() => import('./pages/AICoPilot'));
 
 // Navigation items — plugins can inject additional items
 const coreNavigation: NavigationItem[] = [
@@ -77,7 +81,7 @@ const coreNavigation: NavigationItem[] = [
   {
     id: 'ai-copilot',
     label: 'AI Co-Pilot',
-    href: '#copilot',
+    href: '/ai-copilot',
     badge: 3,
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -133,9 +137,11 @@ export function App(): ReactNode {
           }
         >
           {route === '/' && <Dashboard />}
+          {route === '/payments' && <Payments />}
           {route === '/credit-health' && <CreditHealth />}
-          {/* Additional routes would be matched here */}
-          {/* Plugin routes would be dynamically injected */}
+          {route === '/disputes' && <Disputes />}
+          {route === '/marketplace' && <Marketplace />}
+          {route === '/ai-copilot' && <AICoPilot />}
         </Suspense>
       </Shell>
     </ErrorBoundary>

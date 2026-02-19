@@ -104,53 +104,67 @@ export function Shell({ children, navigation, user, onLogout }: ShellProps) {
 
         {/* Navigation items */}
         <nav style={{ flex: 1, padding: '0.5rem', overflowY: 'auto' }}>
-          {navigation.map((item) => (
-            <a
-              key={item.id}
-              href={item.href}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.75rem',
-                padding: '0.625rem 0.75rem',
-                borderRadius: 'var(--radius-md)',
-                color: 'var(--color-text-secondary)',
-                fontSize: '0.875rem',
-                fontWeight: 500,
-                textDecoration: 'none',
-                transition: 'background-color 150ms ease, color 150ms ease',
-                whiteSpace: 'nowrap',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-primary-light)';
-                e.currentTarget.style.color = 'var(--color-primary)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = 'var(--color-text-secondary)';
-              }}
-            >
-              <span style={{ flexShrink: 0, width: '20px', height: '20px' }}>{item.icon}</span>
-              {sidebarOpen && <span>{item.label}</span>}
-              {sidebarOpen && item.badge != null && item.badge > 0 && (
-                <span
-                  style={{
-                    marginLeft: 'auto',
-                    backgroundColor: 'var(--color-primary)',
-                    color: 'white',
-                    fontSize: '0.6875rem',
-                    fontWeight: 600,
-                    padding: '0.125rem 0.5rem',
-                    borderRadius: '9999px',
-                    minWidth: '20px',
-                    textAlign: 'center',
-                  }}
-                >
-                  {item.badge}
-                </span>
-              )}
-            </a>
-          ))}
+          {navigation.map((item) => {
+            const isActive = window.location.pathname === item.href
+              || (item.href === '/' && window.location.pathname === '');
+            return (
+              <a
+                key={item.id}
+                href={item.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.history.pushState({}, '', item.href);
+                  window.dispatchEvent(new PopStateEvent('popstate'));
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  padding: '0.625rem 0.75rem',
+                  borderRadius: 'var(--radius-md)',
+                  color: isActive ? 'var(--color-primary)' : 'var(--color-text-secondary)',
+                  backgroundColor: isActive ? 'var(--color-primary-light)' : 'transparent',
+                  fontSize: '0.875rem',
+                  fontWeight: isActive ? 600 : 500,
+                  textDecoration: 'none',
+                  transition: 'background-color 150ms ease, color 150ms ease',
+                  whiteSpace: 'nowrap',
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor = 'var(--color-primary-light)';
+                    e.currentTarget.style.color = 'var(--color-primary)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = 'var(--color-text-secondary)';
+                  }
+                }}
+              >
+                <span style={{ flexShrink: 0, width: '20px', height: '20px' }}>{item.icon}</span>
+                {sidebarOpen && <span>{item.label}</span>}
+                {sidebarOpen && item.badge != null && item.badge > 0 && (
+                  <span
+                    style={{
+                      marginLeft: 'auto',
+                      backgroundColor: 'var(--color-primary)',
+                      color: 'white',
+                      fontSize: '0.6875rem',
+                      fontWeight: 600,
+                      padding: '0.125rem 0.5rem',
+                      borderRadius: '9999px',
+                      minWidth: '20px',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {item.badge}
+                  </span>
+                )}
+              </a>
+            );
+          })}
         </nav>
 
         {/* User area */}
