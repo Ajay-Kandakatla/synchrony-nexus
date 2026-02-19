@@ -12,7 +12,8 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "strict": true,
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+    "types": ["node"]
   },
   "include": ["vite.config.ts"]
 }
