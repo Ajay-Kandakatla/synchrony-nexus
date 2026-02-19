@@ -7,8 +7,8 @@ import { Button } from '../../shared/components/ui/Button';
  *
  * Surfaces personalized credit offers, partner deals, credit limit
  * increase opportunities, and rewards summaries. Designed for a power
- * user with 15 Synchrony products who wants to maximize value from
- * the Synchrony ecosystem.
+ * user with 15 products who wants to maximize value from
+ * the Nexus ecosystem.
  */
 
 // ---------------------------------------------------------------------------
@@ -74,7 +74,7 @@ type SortOption = (typeof sortOptions)[number];
 const preApprovedOffers: PreApprovedOffer[] = [
   {
     id: 'pa-1',
-    name: 'Synchrony Premier Visa',
+    name: 'Nexus Premier Visa',
     color: '#1a1a2e',
     accentColor: '#c9a84c',
     creditLimit: 15000,
@@ -320,7 +320,7 @@ function MiniCardVisual({ color, accentColor, name }: { color: string; accentCol
         background: `${accentColor ?? '#ffffff'}11`,
       }} />
       <div style={{ fontSize: '0.65rem', fontWeight: 600, color: '#ffffffcc', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-        Synchrony
+        Nexus
       </div>
       <div>
         <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#ffffff', lineHeight: 1.3 }}>{name}</div>

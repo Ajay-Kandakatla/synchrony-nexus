@@ -1,7 +1,7 @@
 /**
  * Core product type system.
  *
- * Every financial product in the Synchrony ecosystem implements BaseProduct.
+ * Every financial product in the Nexus ecosystem implements BaseProduct.
  * The plugin system registers product types at runtime, and the capability
  * system determines what UI surfaces and actions are available for each.
  */

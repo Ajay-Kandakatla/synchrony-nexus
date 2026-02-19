@@ -115,12 +115,12 @@ function CreditCardSummaryWrapper({ productId }: { productId: string }) {
 // ---------------------------------------------------------------------------
 
 export const creditCardPlugin: ProductPlugin = {
-  id: 'synchrony-credit-card',
+  id: 'nexus-credit-card',
   categories: ['credit_card'],
 
   display: {
     name: 'Credit Cards',
-    description: 'Synchrony credit card management',
+    description: 'Nexus credit card management',
     icon: '💳',
     color: '#2563eb',
   },

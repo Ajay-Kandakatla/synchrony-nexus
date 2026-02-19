@@ -3,7 +3,7 @@ import { Card } from '../../shared/components/ui/Card';
 import { Button } from '../../shared/components/ui/Button';
 
 // ---------------------------------------------------------------------------
-// Demo data: 15 Synchrony partner credit cards (matching Dashboard dataset)
+// Demo data: 15 partner credit cards (matching Dashboard dataset)
 // ---------------------------------------------------------------------------
 
 interface DemoCard {
@@ -37,7 +37,7 @@ const demoCards: DemoCard[] = [
   { id: '12', partner: 'Ashley Furniture', lastFour: '7710', balance: 4890, limit: 10000, minPayment: 110, dueDate: 'Feb 26', daysUntilDue: 8, apr: 29.99, promoApr: { rate: 0, expires: 'Sep 30', balance: 4890 }, color: '#7B2D26', autopay: false, autopayAmount: 'min' },
   { id: '13', partner: 'Discount Tire', lastFour: '3321', balance: 780, limit: 3000, minPayment: 25, dueDate: 'Mar 2', daysUntilDue: 12, apr: 29.99, color: '#E31837', autopay: false, autopayAmount: 'min' },
   { id: '14', partner: 'TJX Rewards', lastFour: '5544', balance: 412, limit: 2000, minPayment: 27, dueDate: 'Mar 7', daysUntilDue: 17, apr: 30.74, color: '#CC0000', autopay: true, autopayAmount: 'min' },
-  { id: '15', partner: 'Synchrony HOME', lastFour: '1287', balance: 1950, limit: 15000, minPayment: 42, dueDate: 'Mar 15', daysUntilDue: 25, apr: 26.99, color: '#1A1A2E', autopay: false, autopayAmount: 'min' },
+  { id: '15', partner: 'Nexus HOME', lastFour: '1287', balance: 1950, limit: 15000, minPayment: 42, dueDate: 'Mar 15', daysUntilDue: 25, apr: 26.99, color: '#1A1A2E', autopay: false, autopayAmount: 'min' },
 ];
 
 // ---------------------------------------------------------------------------
@@ -240,7 +240,7 @@ export default function Payments(): ReactNode {
       <div style={{ marginBottom: '1.5rem' }}>
         <h1 style={{ margin: '0 0 0.25rem', fontSize: '1.5rem', fontWeight: 700 }}>Payments</h1>
         <p style={{ margin: 0, color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>
-          Manage payments across all 15 Synchrony accounts
+          Manage payments across all 15 accounts
         </p>
       </div>
 

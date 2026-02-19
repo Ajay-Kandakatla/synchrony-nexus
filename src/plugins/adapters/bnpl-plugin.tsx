@@ -1,7 +1,7 @@
 import type { ProductPlugin } from '../registry/plugin-registry';
 
 /**
- * BNPL / Installment Plugin — Synchrony Pay Later & SetPay.
+ * BNPL / Installment Plugin — Nexus Pay Later & SetPay.
  *
  * Demonstrates how a second product type plugs in with zero
  * changes to the shell app. Different capabilities, different
@@ -44,12 +44,12 @@ function BNPLDetailView({ productId }: { productId: string }) {
 }
 
 export const bnplPlugin: ProductPlugin = {
-  id: 'synchrony-bnpl',
+  id: 'nexus-bnpl',
   categories: ['bnpl', 'installment_loan'],
 
   display: {
     name: 'Pay Later',
-    description: 'Synchrony Pay Later & SetPay installment plans',
+    description: 'Nexus Pay Later & SetPay installment plans',
     icon: '📦',
     color: '#8b5cf6',
   },

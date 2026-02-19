@@ -4,7 +4,7 @@ import type { ApiClient } from './api-client';
 /**
  * API Adapter interface — the integration boundary for partner APIs.
  *
- * Every external API (Synchrony core, partner services, AI engine)
+ * Every external API (core platform, partner services, AI engine)
  * is accessed through an adapter that conforms to this interface.
  * This allows:
  * - Swapping backends without touching domain logic

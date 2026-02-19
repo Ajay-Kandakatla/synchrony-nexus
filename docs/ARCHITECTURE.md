@@ -1,4 +1,4 @@
-# Synchrony Nexus — Next-Generation Servicing Platform
+# Nexus — Next-Generation Servicing Platform
 
 ## 1. Executive Vision
 
@@ -13,7 +13,7 @@ This is the opposite of what modern financial technology should deliver.
 
 ### The Paradigm Shift: From Reactive Servicing to Financial Co-Piloting
 
-**Synchrony Nexus** replaces the dashboard-centric model with an
+**Nexus** replaces the dashboard-centric model with an
 **event-driven, AI-native servicing platform** that operates on three principles:
 
 1. **Invisible servicing** — The best interaction is the one that never needs
@@ -30,9 +30,9 @@ This is the opposite of what modern financial technology should deliver.
    intent: "I want to pay less interest" → the system routes them to the
    optimal action across all their products. No menus. No hunting.
 
-### Why This Matters for Synchrony
+### Why This Matters
 
-Synchrony operates across 500K+ partner locations with products spanning
+The platform operates across 500K+ partner locations with products spanning
 credit cards, BNPL, CareCredit, savings, and installment loans. The current
 marketplace connects consumers to products. **Nexus turns that connection into
 a lifelong servicing relationship** that:

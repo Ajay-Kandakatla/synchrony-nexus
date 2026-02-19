@@ -6,13 +6,13 @@ import { useServices } from '../providers';
 /**
  * Dashboard — the unified product overview.
  *
- * Simulates 15 real Synchrony partner credit cards to stress-test
+ * Simulates 15 real partner credit cards to stress-test
  * the UI at scale. Shows how the platform handles a power user
  * with many products across different partner ecosystems.
  */
 
 // ---------------------------------------------------------------------------
-// Demo data: 15 realistic Synchrony credit cards
+// Demo data: 15 realistic partner credit cards
 // ---------------------------------------------------------------------------
 
 interface CardPerk {
@@ -190,7 +190,7 @@ const demoCards: DemoCard[] = [
     networkRewards: 'Mastercard — earns 1% everywhere',
   },
   {
-    id: '15', partner: 'Synchrony HOME', category: 'Home', lastFour: '1287', balance: 1950, limit: 15000, minPayment: 42, dueDate: 'Mar 15', daysUntilDue: 25, apr: 26.99, color: '#1A1A2E',
+    id: '15', partner: 'Nexus HOME', category: 'Home', lastFour: '1287', balance: 1950, limit: 15000, minPayment: 42, dueDate: 'Mar 15', daysUntilDue: 25, apr: 26.99, color: '#1A1A2E',
     bestFor: 'Flooring, HVAC, kitchen, bath & home projects',
     rewardRate: '2% back + promo financing',
     perks: [
@@ -231,7 +231,7 @@ const purchaseScenarios: PurchaseScenario[] = [
     scenario: 'New HVAC system ($8,000)',
     icon: '❄️',
     recommendedCardId: '15',
-    reason: 'Synchrony HOME offers 0% for 60 months at HVAC contractors + 2% back',
+    reason: 'Nexus HOME offers 0% for 60 months at HVAC contractors + 2% back',
     savings: '$2,880 saved vs. 29.99% APR over 60 months',
     alternativeCardId: '1',
     alternativeReason: "Lowe's card gets 5% off if buying the unit at Lowe's",
@@ -344,7 +344,7 @@ export default function Dashboard(): ReactNode {
           Good morning, Ajay
         </h1>
         <p style={{ margin: 0, color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>
-          Managing 15 Synchrony accounts across {new Set(demoCards.map(c => c.category)).size} categories
+          Managing 15 accounts across {new Set(demoCards.map(c => c.category)).size} categories
         </p>
       </div>
 
@@ -913,7 +913,7 @@ export default function Dashboard(): ReactNode {
               { icon: '🎯', title: 'Debt avalanche strategy', description: 'Pay minimums on 14 cards, throw extra at TJX Rewards (30.74% APR). Saves $2,140/year.', cta: 'See full plan' },
               { icon: '⏰', title: 'Promo payoff priority', description: "Pay off Lowe's $2,340 promo before Mar 4 to avoid $701/yr in interest at 29.99%", cta: 'Schedule payment' },
               { icon: '📊', title: 'Utilization optimization', description: 'Rooms To Go is at 78%. Paying $2,200 brings total utilization under 30% — potential +20pt score boost', cta: 'Simulate' },
-              { icon: '💳', title: 'Consider consolidation', description: 'With 15 cards, a balance transfer to Synchrony HOME (26.99%) could simplify payments and reduce interest', cta: 'Compare options' },
+              { icon: '💳', title: 'Consider consolidation', description: 'With 15 cards, a balance transfer to Nexus HOME (26.99%) could simplify payments and reduce interest', cta: 'Compare options' },
             ].map((s) => (
               <Card key={s.title} variant="interactive" padding="md">
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>

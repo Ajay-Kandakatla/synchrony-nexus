@@ -122,10 +122,10 @@ const initialMessages: ChatMessage[] = [
     id: 'm2',
     role: 'assistant',
     content:
-      'Great question! Looking at your 15 Synchrony cards, none of them are optimized for grocery rewards since they are partner retail cards. However, I can help you think strategically:\n\n' +
+      'Great question! Looking at your 15 cards, none of them are optimized for grocery rewards since they are partner retail cards. However, I can help you think strategically:\n\n' +
       '\u2022 Sam\'s Club Mastercard (\u2022\u20223847) \u2014 Best option. It earns rewards on Sam\'s Club purchases and has 62% available credit. If you shop at Sam\'s Club, this is ideal.\n\n' +
       '\u2022 Amazon Store Card (\u2022\u20226234) \u2014 If buying groceries through Amazon Fresh or Whole Foods, you\'d get 5% back with Prime.\n\n' +
-      'For general grocery stores, I\'d recommend using a non-Synchrony card with grocery category bonuses if you have one.',
+      'For general grocery stores, I\'d recommend using a dedicated grocery card with category bonuses if you have one.',
     timestamp: '10:32 AM',
     actions: [{ label: 'Compare all card rewards', variant: 'secondary' }],
   },
@@ -423,7 +423,7 @@ export default function AICoPilot(): ReactNode {
         id: `a-${Date.now()}`,
         role: 'assistant',
         content:
-          'I\'ve analyzed your question across all 15 of your Synchrony accounts. Based on your current balances, payment history, and promotional rates, here is what I recommend:\n\n' +
+          'I\'ve analyzed your question across all 15 of your accounts. Based on your current balances, payment history, and promotional rates, here is what I recommend:\n\n' +
           'Your total outstanding balance across all cards is $18,420. With your current payment trajectory, you could be debt-free in approximately 14 months by following the optimized plan I\'ve prepared. Would you like me to walk through the details?',
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         actions: [
@@ -502,7 +502,7 @@ export default function AICoPilot(): ReactNode {
             >
               AI
             </span>
-            Synchrony AI Co-Pilot
+            Nexus AI Co-Pilot
           </h1>
           <p style={{ margin: '0.25rem 0 0', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
             Proactive insights and personalized guidance across all 15 of your accounts

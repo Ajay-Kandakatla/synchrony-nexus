@@ -211,7 +211,7 @@ const wizardCards: WizardCard[] = [
   { id: 'w12', partner: 'Ashley Furniture', lastFour: '7710', color: '#7B2D26', category: 'Furniture' },
   { id: 'w13', partner: 'Discount Tire', lastFour: '3321', color: '#E31837', category: 'Auto' },
   { id: 'w14', partner: 'TJX Rewards', lastFour: '5544', color: '#CC0000', category: 'Retail' },
-  { id: 'w15', partner: 'Synchrony HOME', lastFour: '1287', color: '#1A1A2E', category: 'Home' },
+  { id: 'w15', partner: 'Nexus HOME', lastFour: '1287', color: '#1A1A2E', category: 'Home' },
 ];
 
 const transactionsByCard: Record<string, WizardTransaction[]> = {
